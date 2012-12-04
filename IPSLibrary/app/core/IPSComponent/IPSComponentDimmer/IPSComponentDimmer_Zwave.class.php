@@ -93,7 +93,7 @@
 		 * @return boolean Gerätezustand On/Off des Dimmers
 		 */
 		public function GetPower() {
-			return GetValue(IPS_GetVariableIDByName('Boolean', $this->instanceId));
+			return GetValue(IPS_GetVariableIDByName('Status', $this->instanceId));
 		}
 
 	}
