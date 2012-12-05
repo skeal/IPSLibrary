@@ -4,7 +4,7 @@
 	 *
  	 *
 	 * @file          IPSComponentDimmer_Zwave.class.php
-	 * @author        Andreas Brauneis (Modifiziert von Thomas Klupp)
+	 * @author        Thomas Klupp
 	 *
 	 *
 	 */
@@ -71,17 +71,28 @@
 		 * @param integer $level Wert für Dimmer Einstellung (Wertebereich 0-100)
 		 */
 		public function SetState($power, $level) {
-			$levelZW = $level;
-			if (!$power) {
-				ZW_SwitchMode($this->instanceId, false);
-			} else {
-			
-			/**	ZW_DimSet für den zuletzt bekannten Dimmzustand ($Intensity) zu haben
-			 *	ZW_SwitchMode dimmt auf 100%
-			*/
-				ZW_DimSet($this->instanceId, $levelZW);
-				// ZW_SwitchMode($this->instanceId, true);
+			switch ($power) {
+				case 0:
+					ZW_SwitchMode($this->instanceId, false);
+					break;
+				case 1:
+					ZW_DimSet($this->instanceId, $level);
+					break;
+				case 2:
+					ZW_DimSet($this->instanceId, 100);
+					break;
 			}
+		}
+
+		/**
+		 * @public
+		 *
+		 * Liefert aktuellen Level des Dimmers
+		 *
+		 * @return integer aktueller Dimmer Level
+		 */
+		public function GetLevel() {
+			return GetValue(IPS_GetVariableIDByName('Intensity', $this->instanceId));
 			
 		}
 

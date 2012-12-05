@@ -196,7 +196,6 @@
 
 			SetValue($switchId, $value);
 			IPSLogger_Inf(__file__, 'Turn Light '.$configName.' '.($value?'On':'Off'));
-
 			if (IPSLight_BeforeSwitch($switchId, $value)) {
 				$component->SetState($value);
 			}
@@ -227,21 +226,53 @@
 			$switchId     = IPS_GetVariableIDByName($configName, $this->switchCategoryId);
 			$switchValue  = GetValue($switchId);
 			$levelId      = IPS_GetVariableIDByName($configName.IPSLIGHT_DEVICE_LEVEL, $this->switchCategoryId);
-
 			$componentParams = $configLights[$configName][IPSLIGHT_COMPONENT];
 			$component       = IPSComponent::CreateObjectByParams($componentParams);
 
 			if (!$switchValue and $variableId==$levelId) {
 				SetValue($switchId, true);
 				$switchValue = true;
-				if (GetValue($levelId) > 100) { $value = 100; }
-				if (GetValue($levelId) < 0)   { $value = 0; }
+				// if (GetValue($levelId) > 100) { $value = 100; }
+				// if (GetValue($levelId) < 0)   { $value = 0; }
 			}
-			SetValue($variableId, $value);
+			
+			if ($value == 101 or $value == 0) { 
+				$abfrage = 0; 
+			}
+
+			
+			if ($value < 100 AND $value > 0 OR $value == 1) {
+				$abfrage = 1;
+			}
+			
+			if ($value == 2 OR $value == 100) {
+				$abfrage = 2;
+			}
+			
+			switch ($abfrage) {
+				case 0:
+					SetValue($variableId, 0);
+					SetValue($switchId, 0);
+					break;
+				case 1:
+					$switchDim = $component->GetLevel();
+					SetValue($variableId, $value);
+					SetValue($switchId, 1);
+					break;
+				case 2:
+					SetValue($variableId, 100);
+					SetValue($switchId, 2);
+					break;
+			}
+			
+			// SetValue($variableId, $dimValue);
+
 			IPSLogger_Inf(__file__, 'Turn Light '.$configName.' '.($switchValue?'On, Level='.GetValue($levelId):'Off'));
 
 			if (IPSLight_BeforeSwitch($switchId, $switchValue)) {
 				$component->SetState(GetValue($switchId), GetValue($levelId));
+				$value = GetValue($switchId);
+				
 			}
 			IPSLight_AfterSwitch($switchId, $switchValue);
 

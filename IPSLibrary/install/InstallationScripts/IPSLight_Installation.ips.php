@@ -120,7 +120,7 @@
 				$switchId = CreateVariable($deviceName,    0 /*Boolean*/, $categoryIdSwitches,  $idx, '~Switch', $scriptIdActionScript, false, 'Bulb');
 				break;
 			case IPSLIGHT_TYPE_DIMMER:
-				$switchId = CreateVariable($deviceName,                       0 /*Boolean*/, $categoryIdSwitches,  $idx, '~Switch',        $scriptIdActionScript, false, 'Bulb');
+				$switchId = CreateVariable($deviceName,                       1 /*Integer*/, $categoryIdSwitches,  $idx, 'DimmerSet',        $scriptIdActionScript, false, 'Bulb');
 				$levelId  = CreateVariable($deviceName.IPSLIGHT_DEVICE_LEVEL, 1 /*Integer*/, $categoryIdSwitches,  $idx, '~Intensity.100', $scriptIdActionScript, false, 'Intensity');
 				break;
 			case IPSLIGHT_TYPE_RGB:
